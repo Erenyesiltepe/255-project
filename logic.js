@@ -1,7 +1,15 @@
 
 var letters=["Y","E","S","I","P","A"];
 var positions=[];
-var words=["PLAYS","EASY","PALE","LEAP","YES","SALE"];
+//var words=["PLAYS","EASY","PALE","LEAP","YES","SALE"];
+const words=[
+  {begin:15,dir:1,word:"PLAYS",active:false},
+  {begin:5,dir:7,word:"EASY",active:true},
+  {begin:15,dir:7,word:"PALE",active:true},
+  {begin:29,dir:1,word:"LEAP",active:true},
+  {begin:26,dir:1,word:"YES",active:true},
+  {begin:28,dir:7,word:"SALE",active:true},
+];
 
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
@@ -48,6 +56,10 @@ function shuffle(array) {
         })
   }
 
+  function placewords(){
+
+  }
+
 $(function(){
 
   setpositions();
@@ -59,6 +71,34 @@ $(function(){
     });
 
 
+    for(var r=0;r<7;r++){
+        $(".wordspart").append("<tr>");
+        for(var c=0;c<7;c++){
+          $(".wordspart").append("<td></td");
+        }
+        $(".wordspart").append("</tr>");
+    }
+    
+      for(var w=0;w<words.length;w++){
+          for(var c=0;c<words[w].word.length;c++){
+            var tmp=words[w];
+            if(tmp.active){
+              $(".wordspart td:nth-of-type("+(tmp.dir*c+tmp.begin)+")").html(`<p style="color:white">${words[w].word[c]}</p>`)
+                                                                        .css("background-color","purple");
+            }
+           else{
+            $(".wordspart td:nth-of-type("+(tmp.dir*c+tmp.begin)+")").css("background-color","white");
+
+           }
+                                                
+                                                
+          }
+      }
+
+
+
+
+    
 
 
 })

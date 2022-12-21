@@ -1,6 +1,7 @@
-*{box-sizing: border-box;
+*{
+    box-sizing: border-box;
     margin: 0px; font-family: 'Unbounded', cursive;
-border:2px solid red;}
+}
 body{display: flex;
     flex-direction: column;
     background-image: url(./background.jpg);
@@ -26,16 +27,15 @@ div p{
     height: 320px;
     margin: 2px auto;
     padding:4px;
-    background-color: pink;
-    position: relative;
 }
 .wordspart td{
-    background-color: white;
+   
     width: 40px;
     height: 40px;
     border-radius: 10px;
-    position:absolute;
+
 }
+
 .wordspart td p{
     text-align: center;
     margin:0px auto;
