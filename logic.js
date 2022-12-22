@@ -1,14 +1,13 @@
 
-var letters=["Y","E","S","I","P","A"];
+var letters=["Y","E","S","L","P","A"];
 var positions=[];
-//var words=["PLAYS","EASY","PALE","LEAP","YES","SALE"];
 const words=[
   {begin:15,dir:1,word:"PLAYS",active:false},
-  {begin:5,dir:7,word:"EASY",active:true},
-  {begin:15,dir:7,word:"PALE",active:true},
-  {begin:29,dir:1,word:"LEAP",active:true},
-  {begin:26,dir:1,word:"YES",active:true},
-  {begin:28,dir:7,word:"SALE",active:true},
+  {begin:5,dir:7,word:"EASY",active:false},
+  {begin:15,dir:7,word:"PALE",active:false},
+  {begin:29,dir:1,word:"LEAP",active:false},
+  {begin:26,dir:1,word:"YES",active:false},
+  {begin:28,dir:7,word:"SALE",active:false},
 ];
 
 function shuffle(array) {
@@ -58,19 +57,48 @@ function shuffle(array) {
 
   function placewords(){
 
+  for(var w=0;w<words.length;w++)
+  {
+    for(var c=0;c<words[w].word.length;c++){
+      var tmp=words[w];
+      if(!tmp.active){
+        $(".wordspart td:nth-of-type("+(tmp.dir*c+tmp.begin)+")")
+                                    .css("background-color","white");
+     }                                
+    }
+}
+
+  for(var w=0;w<words.length;w++)
+  {
+    for(var c=0;c<words[w].word.length;c++){
+      var tmp=words[w];
+      if(tmp.active){
+        $(".wordspart td:nth-of-type("+(tmp.dir*c+tmp.begin)+")").html(`<p style="color:white">${words[w].word[c]}</p>`)
+                                                                  .css("background-color","purple");
+      }                           
+    }
+  }
   }
 
 $(function(){
 
   setpositions();
    printletter();
+
+   var presscount=0;
     
     $("#shuffle").on("click",function(){
+      if(presscount===0){
         shuffle(positions);
         changepos();
+      }
+      else{
+
+      }
+       
     });
 
-
+    //prepare table
     for(var r=0;r<7;r++){
         $(".wordspart").append("<tr>");
         for(var c=0;c<7;c++){
@@ -79,22 +107,86 @@ $(function(){
         $(".wordspart").append("</tr>");
     }
     
-      for(var w=0;w<words.length;w++){
-          for(var c=0;c<words[w].word.length;c++){
-            var tmp=words[w];
-            if(tmp.active){
-              $(".wordspart td:nth-of-type("+(tmp.dir*c+tmp.begin)+")").html(`<p style="color:white">${words[w].word[c]}</p>`)
-                                                                        .css("background-color","purple");
+
+      placewords();
+
+  
+    $(".lets div").each(function(){
+        $(this).click(function(e){
+
+            $(this).css("background-color","aqua");
+            $(this).children().css("color","white");
+            var txt=$(".guess").text();
+            $(".guess").text(txt+$(this).children().text());
+            $(this).css("pointer-events","none");
+            $("#shuffle").css("pointer-events","none");
+            e.stopPropagation();
+        });
+    });
+
+    $("body").on("contextmenu",function(event){
+      event.preventDefault();
+    });
+
+    $(".letters").contextmenu(function(e){
+      console.log("in letters");
+      e.stopPropagation();
+      e.preventDefault();
+
+        $("*").css("pointer-events","all");
+        $(".lets div").each(function(){
+          $(this).css("background-color","inherit");
+          $(this).children().css("color","black");
+        });
+
+        var flag=false;
+        for(var k=0;k<words.length;k++)
+        {
+          console.log(k+"-"+words[k].word+"-"+$(".guess").text());
+          if(words[k].word==$(".guess").text())
+          {
+            if(!words[k].active){
+              words[k].active=true;
+              placewords();
             }
-           else{
-            $(".wordspart td:nth-of-type("+(tmp.dir*c+tmp.begin)+")").css("background-color","white");
+            else{
+              //ilgili kelimeyi salla
+            }
+            flag=true;
 
-           }
-                                                
-                                                
+
+            break;
           }
-      }
+        }
+        $(".guess").text("");
 
+        if(!flag){
+            //guess divini salla
+        }
+    });
+
+
+    
+       /* event.preventDefault();
+        var flag=false;
+        for(var k=0;k<words.length;k++){
+          if(words[k].word===$(".guess").text()){
+            if(!words[k].active){
+              words[k].active=true;
+            }
+            else{
+
+            }
+            flag=true;
+            $(".guess").text("");
+            placewords();
+            break;
+          }
+        }
+
+        if(!flag){
+
+        }*/
 
 
 
