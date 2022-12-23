@@ -10,6 +10,21 @@ const words=[
   {begin:28,dir:7,word:"SALE",active:false},
 ];
 
+function  spectrum(obj){
+  var  mcolors = ['blue', 'purple','blue', 'purple'];
+  var time = 500;             
+  $.each(mcolors, function(index, value){
+  setTimeout( 
+    function(){ 
+        obj.css({
+          transition: 'background-color 1s ease-in-out',
+          "background-color": value });
+         }, time)
+  time += 500;
+  });
+}
+
+
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
   
@@ -61,42 +76,69 @@ function shuffle(array) {
   {
     for(var c=0;c<words[w].word.length;c++){
       var tmp=words[w];
-      if(!tmp.active){
-        $(".wordspart td:nth-of-type("+(tmp.dir*c+tmp.begin)+")")
-                                    .css("background-color","white");
-     }                                
-    }
-}
 
-  for(var w=0;w<words.length;w++)
-  {
-    for(var c=0;c<words[w].word.length;c++){
-      var tmp=words[w];
-      if(tmp.active){
         $(".wordspart td:nth-of-type("+(tmp.dir*c+tmp.begin)+")").html(`<p style="color:white">${words[w].word[c]}</p>`)
-                                                                  .css("background-color","purple");
-      }                           
+                                                                  .addClass(words[w].word)
+                                                                  .css("background-color","white");
     }
   }
   }
 
 $(function(){
 
+  var shuffleactive=true;
+  var hintactive=false;
+
   setpositions();
    printletter();
 
    var presscount=0;
     
-    $("#shuffle").on("click",function(){
-      if(presscount===0){
-        shuffle(positions);
-        changepos();
-      }
-      else{
-
-      }
-       
+      $("#shuffle").on("click",function(){
+        if(shuffleactive){
+          shuffle(positions);
+          changepos();
+        }
+        else{
+          $(this).effect("shake");
+        }
+        
     });
+   
+       $("#lightbulb").on("click",function(){
+
+        console.log("in click"+hintactive);
+            if(!hintactive){
+              hintactive=true;
+            }
+            else{
+              hintactive=false;
+            }
+
+
+              for(var k=0;k<words.length;k++){
+                if(!words[k].active){
+
+                  $("."+words[k].word).children().each(function(){
+                    if(!$(this).hasClass("activeval")){
+                      if(hintactive){
+                        $(this).css("display","block").css("color","rgba(0,0,0,0.5)");
+                        console.log("in add hintcols");
+                      }
+                      else{
+                        $(this).css("display","none");
+                        console.log("in remove hintcols");
+                      }
+                    }
+                   
+                  })
+                  
+                }
+              }
+        
+       
+          
+      });
 
     //prepare table
     for(var r=0;r<7;r++){
@@ -110,87 +152,91 @@ $(function(){
 
       placewords();
 
-  
+    //when letter clicked
     $(".lets div").each(function(){
         $(this).click(function(e){
 
+          if(!$(this).hasClass("clicked")){
+            console.log($(this).children().text()+" chosen");
+
             $(this).css("background-color","aqua");
             $(this).children().css("color","white");
+            $(this).css("transition","none");
+
+           // $(this).css("pointer-events","none");
+            shuffleactive=false;
+
+            $(this).addClass("clicked");
+
             var txt=$(".guess").text();
             $(".guess").text(txt+$(this).children().text());
-            $(this).css("pointer-events","none");
-            $("#shuffle").css("pointer-events","none");
+
             e.stopPropagation();
+          }
+          else{
+              $(this).effect("shake");
+          }
+          
         });
     });
 
+    //prevent default context menu all page
     $("body").on("contextmenu",function(event){
       event.preventDefault();
     });
 
-    $(".letters").contextmenu(function(e){
-      console.log("in letters");
-      e.stopPropagation();
-      e.preventDefault();
+    //context menu in letters
+    $(".letters").contextmenu(function(e)
+    {
 
-        $("*").css("pointer-events","all");
-        $(".lets div").each(function(){
-          $(this).css("background-color","inherit");
-          $(this).children().css("color","black");
-        });
+            e.preventDefault();
+              console.log("all opened");
 
-        var flag=false;
-        for(var k=0;k<words.length;k++)
-        {
-          console.log(k+"-"+words[k].word+"-"+$(".guess").text());
-          if(words[k].word==$(".guess").text())
-          {
-            if(!words[k].active){
-              words[k].active=true;
-              placewords();
-            }
-            else{
-              //ilgili kelimeyi salla
-            }
-            flag=true;
+            //reset pointer events and letters
+            shuffleactive=true;
+              $(".lets div").each(function(){
+                $(this).css("transition","all ease 1s");
+                $(this).css("background-color","inherit");
+                $(this).children().css("color","black");
+                $(this).removeClass("clicked");
+              });
+
+              var flag=false;
+              for(var k=0;k<words.length;k++)
+              {
+                
+                if(words[k].word==$(".guess").text())
+                {
+                  if(!words[k].active){
+                    words[k].active=true;
+                    $("."+words[k].word).css("background-color","purple")
+                    $("."+words[k].word).children().each(function(){
+                        $(this).css("color","black").css("display","block").addClass("activeval");
+                    });
+                                        
+                                        
+                                      //  .css("color","black").css("display","block").addClass("activeval");
+                  }
+                  else{
+                   
+
+                    spectrum($("."+words[k].word));
+
+                  }
+                  flag=true;
 
 
-            break;
-          }
-        }
-        $(".guess").text("");
+                  break;
+                }
+                //console.log(k+"-"+words[k].word+"-"+$(".guess").text()+"-"+flag);
+              }
+              $(".guess").text("");
 
-        if(!flag){
-            //guess divini salla
-        }
+              if(!flag){
+                  //guess divini salla
+                  $(".guess").wiggle();
+              }
     });
 
-
-    
-       /* event.preventDefault();
-        var flag=false;
-        for(var k=0;k<words.length;k++){
-          if(words[k].word===$(".guess").text()){
-            if(!words[k].active){
-              words[k].active=true;
-            }
-            else{
-
-            }
-            flag=true;
-            $(".guess").text("");
-            placewords();
-            break;
-          }
-        }
-
-        if(!flag){
-
-        }*/
-
-
-
-    
-
-
+   
 })
