@@ -11,8 +11,8 @@ const words=[
 ];
 
 function  spectrum(obj){
-  var  mcolors = ['blue', 'purple','blue', 'purple'];
-  var time = 500;             
+  var  mcolors = ['aqua', 'purple','aqua', 'purple'];
+  var time = 300;             
   $.each(mcolors, function(index, value){
   setTimeout( 
     function(){ 
@@ -20,11 +20,9 @@ function  spectrum(obj){
           transition: 'background-color 1s ease-in-out',
           "background-color": value });
          }, time)
-  time += 500;
+  time += 600;
   });
 }
-
-
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
   
@@ -102,7 +100,6 @@ $(function(){
         else{
           $(this).effect("shake");
         }
-        
     });
    
        $("#lightbulb").on("click",function(){
@@ -114,8 +111,6 @@ $(function(){
             else{
               hintactive=false;
             }
-
-
               for(var k=0;k<words.length;k++){
                 if(!words[k].active){
 
@@ -129,15 +124,10 @@ $(function(){
                         $(this).css("display","none");
                         console.log("in remove hintcols");
                       }
-                    }
-                   
-                  })
-                  
+                    } 
+                  })    
                 }
-              }
-        
-       
-          
+              }  
       });
 
     //prepare table
@@ -148,8 +138,6 @@ $(function(){
         }
         $(".wordspart").append("</tr>");
     }
-    
-
       placewords();
 
     //when letter clicked
@@ -176,7 +164,6 @@ $(function(){
           else{
               $(this).effect("shake");
           }
-          
         });
     });
 
@@ -188,7 +175,6 @@ $(function(){
     //context menu in letters
     $(".letters").contextmenu(function(e)
     {
-
             e.preventDefault();
               console.log("all opened");
 
@@ -203,8 +189,7 @@ $(function(){
 
               var flag=false;
               for(var k=0;k<words.length;k++)
-              {
-                
+              {  
                 if(words[k].word==$(".guess").text())
                 {
                   if(!words[k].active){
@@ -213,19 +198,11 @@ $(function(){
                     $("."+words[k].word).children().each(function(){
                         $(this).css("color","black").css("display","block").addClass("activeval");
                     });
-                                        
-                                        
-                                      //  .css("color","black").css("display","block").addClass("activeval");
                   }
                   else{
-                   
-
                     spectrum($("."+words[k].word));
-
                   }
                   flag=true;
-
-
                   break;
                 }
                 //console.log(k+"-"+words[k].word+"-"+$(".guess").text()+"-"+flag);
@@ -237,6 +214,4 @@ $(function(){
                   $(".guess").wiggle();
               }
     });
-
-   
 })
