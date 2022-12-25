@@ -143,6 +143,7 @@ $(function(){
     //when letter clicked
     $(".lets div").each(function(){
         $(this).click(function(e){
+          $(".guess").css("background-color","purple");
 
           if(!$(this).hasClass("clicked")){
             console.log($(this).children().text()+" chosen");
@@ -151,7 +152,6 @@ $(function(){
             $(this).children().css("color","white");
             $(this).css("transition","none");
 
-           // $(this).css("pointer-events","none");
             shuffleactive=false;
 
             $(this).addClass("clicked");
@@ -177,6 +177,7 @@ $(function(){
     {
             e.preventDefault();
               console.log("all opened");
+              $(".guess").css("background-color","rgba(0,0,0,0)");
 
             //reset pointer events and letters
             shuffleactive=true;
